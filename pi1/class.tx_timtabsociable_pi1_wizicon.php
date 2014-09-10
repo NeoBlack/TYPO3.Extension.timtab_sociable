@@ -34,39 +34,48 @@
  */
 class tx_timtabsociable_pi1_wizicon {
 
-					/**
-					 * Processing the wizard items array
-					 *
-					 * @param	array		$wizardItems: The wizard items
-					 * @return	Modified array with wizard items
-					 */
-					function proc($wizardItems)	{
-						global $LANG;
+	/**
+	 * Processing the wizard items array
+	 *
+	 * @param	array		$wizardItems: The wizard items
+	 * @return	Modified array with wizard items
+	 */
+	function proc($wizardItems)	{
+		global $LANG;
 
-						$LL = $this->includeLocalLang();
+		$LL = $this->includeLocalLang();
 
-						$wizardItems['plugins_tx_timtabsociable_pi1'] = array(
-							'icon'=>t3lib_extMgm::extRelPath('timtab_sociable').'pi1/ce_wiz.gif',
-							'title'=>$LANG->getLLL('pi1_title',$LL),
-							'description'=>$LANG->getLLL('pi1_plus_wiz_description',$LL),
-							'params'=>'&defVals[tt_content][CType]=list&defVals[tt_content][list_type]=timtab_sociable_pi1'
-						);
+		$wizardItems['plugins_tx_timtabsociable_pi1'] = array(
+			'icon'=>t3lib_extMgm::extRelPath('timtab_sociable').'pi1/ce_wiz.gif',
+			'title'=>$LANG->getLLL('pi1_title',$LL),
+			'description'=>$LANG->getLLL('pi1_plus_wiz_description',$LL),
+			'params'=>'&defVals[tt_content][CType]=list&defVals[tt_content][list_type]=timtab_sociable_pi1'
+		);
 
-						return $wizardItems;
-					}
+		return $wizardItems;
+	}
 
-					/**
-					 * Reads the [extDir]/locallang.xml and returns the \$LOCAL_LANG array found in that file.
-					 *
-					 * @return	The array with language labels
-					 */
-					function includeLocalLang()	{
-						$llFile = t3lib_extMgm::extPath(timtab_sociable).'locallang.xml';
-						$LOCAL_LANG = t3lib_div::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
-						
-						return $LOCAL_LANG;
-					}
-				}
+	/**
+	 * Reads the [extDir]/locallang.xml and returns the $LOCAL_LANG array found in that file.
+	 *
+	 * @return    The        array with language labels
+	 */
+	function includeLocalLang()    {
+		$llFile = t3lib_extMgm::extPath('timtab_sociable').'locallang.xml';
+
+		$version =     class_exists('t3lib_utility_VersionNumber')
+			? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version)
+			: t3lib_div::int_from_ver(TYPO3_version);
+		if ($version >= 4007000) {
+			$object = t3lib_div::makeInstance('t3lib_l10n_parser_Llxml');
+			$LOCAL_LANG =  $object->getParsedData($llFile, $GLOBALS['LANG']->lang);
+		} else {
+			$LOCAL_LANG =  t3lib_div::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
+		}
+
+		return $LOCAL_LANG;
+	}
+}
 
 
 
